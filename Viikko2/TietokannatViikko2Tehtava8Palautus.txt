@@ -1,0 +1,14 @@
+#Tehtava8a
+select name from language order by name;
+
+#Tehtava8b
+select title from film join film_actor on film.film_id = film_actor.film_id join actor on film_actor.actor_id = actor.actor_id where last_name='Temple';
+
+#Tehtava8c
+select first_name,last_name from actor join film_actor on actor.actor_id = film_actor.actor_id join film on film_actor.film_id = film.film_id where title='GHOST GROUNDHOG';
+
+#Tehtava8d
+select count(title) from film join film_category on film.film_id = film_category.film_id join category on film_category.category_id = category.category_id where name='Horror';
+
+#Tehtava8e
+select title from film join film_category on film.film_id = film_category.film_id join category on film_category.category_id = category.category_id where name='Horror';

@@ -1,0 +1,20 @@
+#Tehtava5a
+select distinct dept_name from departments;
+
+#Tehtava5b
+select distinct title from titles;
+
+#Tehtava5c
+select max(salary), min(salary) from salaries where to_date='9999-01-01';
+
+#Tehtava5d
+select avg(salary) from salaries where to_date='9999-01-01';
+
+#Tehtava5e
+select * from employees where last_name='Facello';
+
+#Tehtava5f
+select count(*) from employees where birth_date like "195%";
+
+#Tehtava5g
+select gender,count(*) from employees group by gender;

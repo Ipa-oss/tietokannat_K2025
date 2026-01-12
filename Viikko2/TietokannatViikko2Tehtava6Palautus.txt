@@ -1,0 +1,37 @@
+#Tehtava6
+create table owner (first_name varchar(255), last_name varchar(255), address varchar(255), ownerID int primary key auto_increment);
+desc owner;
++------------+--------------+------+-----+---------+----------------+
+| Field      | Type         | Null | Key | Default | Extra          |
++------------+--------------+------+-----+---------+----------------+
+| first_name | varchar(255) | YES  |     | NULL    |                |
+| last_name  | varchar(255) | YES  |     | NULL    |                |
+| address    | varchar(255) | YES  |     | NULL    |                |
+| ownerID    | int          | NO   | PRI | NULL    | auto_increment |
++------------+--------------+------+-----+---------+----------------+
+
+alter table pet drop column owner;
+alter table pet add column petID int primary key auto_increment;
+alter table pet add column ownerID int;
+alter table pet add constraint foreign key(ownerID) references owner(ownerID);
+desc pet;
++---------+-------------+------+-----+---------+----------------+
+| Field   | Type        | Null | Key | Default | Extra          |
++---------+-------------+------+-----+---------+----------------+
+| name    | varchar(20) | YES  |     | NULL    |                |
+| species | varchar(20) | YES  |     | NULL    |                |
+| sex     | char(1)     | YES  |     | NULL    |                |
+| birth   | date        | YES  |     | NULL    |                |
+| death   | date        | YES  |     | NULL    |                |
+| petID   | int         | NO   | PRI | NULL    | auto_increment |
+| ownerID | int         | YES  | MUL | NULL    |                |
++---------+-------------+------+-----+---------+----------------+
+
+insert into owner values('Harold','Lloyd','Someaddress 1',NULL);
+insert into owner values('Gwen','Stefani','Someaddress 2',NULL);
+insert into owner values('Benny','Hill','Someaddress 3',NULL);
+insert into owner values('Diane','Keaton','Someaddress 4',NULL);
+update pet set ownerID=1 where name='Fluffy' or name='Buffy';
+update pet set ownerID=2 where name='Claws' or name='Chirpy' or name='Whistler';
+update pet set ownerID=3 where name='Fang' or name='Slim';
+update pet set ownerID=4 where name='Bowser';
