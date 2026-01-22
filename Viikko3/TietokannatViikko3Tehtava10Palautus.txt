@@ -1,0 +1,14 @@
+#Tehtava10.1
+select distinct etunimi,sukunimi from Arviointi JOIN Opiskelija using(idOpiskelija) JOIN Opintojakso using(idOpintojakso) where arvosana=0;
+
+#Tehtava10.2
+select distinct etunimi,sukunimi from Arviointi JOIN Opiskelija using(idOpiskelija) JOIN Opintojakso using(idOpintojakso) where nimi='Fysiikka 3' and arvosana>0;
+
+#Tehtava10.3
+select distinct nimi from Arviointi JOIN Opiskelija using(idOpiskelija) JOIN Opintojakso using(idOpintojakso) where etunimi='Hessu';
+
+#Tehtava10.4
+select avg(arvosana) from Arviointi JOIN Opiskelija using(idOpiskelija) JOIN Opintojakso using(idOpintojakso) where etunimi='Aku';
+
+#Tehtava10.5
+select nimi from Arviointi right JOIN Opintojakso using(idOpintojakso) where arvosana is NULL;
