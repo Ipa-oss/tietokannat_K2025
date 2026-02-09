@@ -1,0 +1,79 @@
+#Tehtava15a
+CREATE DEFINER=`Ipa-oss`@`localhost` PROCEDURE `nosta_tai_laske`(IN OP VARCHAR(1))
+BEGIN
+	/*Paikalliset muuttujat*/
+	DECLARE arvos INT;
+	DECLARE ID INT;
+	/*Tosi, kun kursori menee taulun loppuun*/
+	DECLARE done BOOLEAN;
+	/*Haetaan kursoriin kaikki tiedot kahdesta sarakkeesta*/
+	DECLARE arvos_cursor CURSOR for SELECT idArviointi,Arvosana FROM Arviointi;
+	/* NOT FOUND-käsittelijä (kun rivit loppuu) */
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=TRUE;
+	/*Avataan kursori*/
+	OPEN arvos_cursor;
+	/*Aloitetaan silmukka*/
+	IF OP = '+' THEN
+		arvos_loop: loop
+			/*Sijoitetaan kursorin arvot rivi kerrallaan muuttujiin*/
+			FETCH arvos_cursor INTO ID,arvos;
+			/*Kun kaikki luettu, silmukasta ulos*/
+			IF done then
+				CLOSE arvos_cursor;
+				LEAVE arvos_loop;
+			END IF;
+			/*Päivitetään Arvosana-sarakkeen yksi rivi*/
+			UPDATE Arviointi SET Arvosana=arvos+1 WHERE ID=idArviointi AND Arvosana < 5;
+		END LOOP arvos_loop;
+	ELSEIF OP = '-' THEN
+		arvos_loop: loop
+			/*Sijoitetaan kursorin arvot rivi kerrallaan muuttujiin*/
+			FETCH arvos_cursor INTO ID,arvos;
+			/*Kun kaikki luettu, silmukasta ulos*/
+			IF done then
+				CLOSE arvos_cursor;
+				LEAVE arvos_loop;
+			END IF;
+			/*Päivitetään Arvosana-sarakkeen yksi rivi*/
+			UPDATE Arviointi SET Arvosana=arvos-1 WHERE ID=idArviointi AND Arvosana < 5;
+		END LOOP arvos_loop;	
+	ELSE
+		CLOSE arvos_cursor;
+	END IF;
+END;$$
+
+/*Yllä oleva kursorihan ei osaa palauttaa arvoja, jos niitä nostettaessa, ne saavat arvon 5. Tämän ominaisuuden voisi saada jonkinlaisella sivutaulukolla.*/
+
+
+
+#Tehtava15b
+CREATE DEFINER=`Ipa-oss`@`localhost` PROCEDURE `vaihda_luokkatunnus`(IN alkutunnus VARCHAR(45),IN uusitunnus VARCHAR(45))
+BEGIN
+	/*Pohjana käytetty esimerkkimateriaalia kts. edellinen kursori*/
+	DECLARE luokka VARCHAR(45);
+	DECLARE ID INT;
+	DECLARE done BOOLEAN;
+	/*Sallitaan lukeminen näistä kahdesta sarakkeesta*/
+	DECLARE luokka_cursor CURSOR for SELECT idOpiskelija,Luokkatunnus FROM Opiskelija;
+	/*NOT FOUND-käsittelijä asettaa done muuttujan arvoon true, kun kursori ei löydä seuraavaa kenttää*/
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=TRUE;
+	/*Avataan kursori*/
+	OPEN luokka_cursor;
+	luokka_loop: loop
+		/*Kursori lukee arvot rivi kerrallaan muuttujiin*/
+		FETCH luokka_cursor INTO ID,luokka;
+		/*done on true, kun kursori ei löydä seuraavaa kenttää*/
+		IF done then
+			CLOSE luokka_cursor;
+			LEAVE luokka_loop;
+		END IF;
+        	/*Jos kursori löytää Luokkatunnuksen, joka on sama kuin alkutunnus parametrina annettu luokkatunnus, se muuttaa sen uusitunnus parametrin mukaiseksi luokkatunnukseksi*/
+        	IF alkutunnus = luokka then
+			UPDATE Opiskelija SET Luokkatunnus=uusitunnus WHERE ID=idOpiskelija;
+		END IF;
+	END LOOP luokka_loop;
+END;$$
+
+/*Yllä oleva kursori voi siis vaihtaa minkä tahansa luokkatunnuksen toiseksi.*/
+/*Kutsutaan esim. seuraavalla tavalla: CALL vaihda_luokkatunnus('TVT25SPL','TVT25SP');*/
+/*Parametrit voivat tietenkin olla mitä vain.*/
