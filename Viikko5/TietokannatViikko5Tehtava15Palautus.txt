@@ -67,8 +67,8 @@ BEGIN
 			CLOSE luokka_cursor;
 			LEAVE luokka_loop;
 		END IF;
-        	/*Jos kursori löytää Luokkatunnuksen, joka on sama kuin alkutunnus parametrina annettu luokkatunnus, se muuttaa sen uusitunnus parametrin mukaiseksi luokkatunnukseksi*/
-        	IF alkutunnus = luokka then
+		/*Jos kursori löytää Luokkatunnuksen, joka on sama kuin alkutunnus parametrina annettu luokkatunnus, se muuttaa sen uusitunnus parametrin mukaiseksi luokkatunnukseksi*/
+		IF alkutunnus = luokka then
 			UPDATE Opiskelija SET Luokkatunnus=uusitunnus WHERE ID=idOpiskelija;
 		END IF;
 	END LOOP luokka_loop;
