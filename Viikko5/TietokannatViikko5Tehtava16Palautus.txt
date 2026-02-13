@@ -1,3 +1,26 @@
+#Tehtava16a
+
+Tehtiin oppimateriaalin mukainen Muutokset taulu ja lisättiin Opiskelija tauluun seuraavat liipaisimet:
+
+CREATE
+DEFINER=`Ipa-oss`@`localhost`
+TRIGGER `arviointi`.`Opiskelija_AFTER_INSERT`
+AFTER INSERT ON `arviointi`.`Opiskelija`
+FOR EACH ROW
+BEGIN
+	INSERT INTO Muutokset VALUES (NULL,now(),'Lisays opiskelijatauluun');
+END
+
+CREATE
+DEFINER=`Ipa-oss`@`localhost`
+TRIGGER `arviointi`.`Opiskelija_AFTER_UPDATE`
+AFTER UPDATE ON `arviointi`.`Opiskelija`
+FOR EACH ROW
+BEGIN
+	INSERT INTO Muutokset VALUES (NULL,now(),'Muutos opiskelijatauluun');
+END
+
+#Tehtava16b
 Tehdään roskakori taulu joka on muotoa:
 
 mysql> desc Roskakori;
