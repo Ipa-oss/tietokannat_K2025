@@ -1,0 +1,43 @@
+Tehdään roskakori taulu joka on muotoa:
+
+mysql> desc Roskakori;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| idRoskakori | int unsigned | NO   | PRI | NULL    | auto_increment |
+| Kayttaja    | varchar(45)  | YES  |     | NULL    |                |
+| Taulu       | varchar(45)  | YES  |     | NULL    |                |
+| Poistoaika  | datetime     | YES  |     | NULL    |                |
+| Poisto      | varchar(145) | YES  |     | NULL    |                |
++-------------+--------------+------+-----+---------+----------------+
+
+Tehdään jokaiselle taululle liipaisin joka listaa poistetut esineet:
+
+Muutin esimerkissä annettua liipaisinta vähän käytännöllisemmäksi. Nyt listataan myös poiston tehnyt käyttäjä CURRENT_USER() funktiolla sekä taulu johon poisto tehtiin.
+
+Opiskelija-taulu:
+
+CREATE DEFINER = CURRENT_USER TRIGGER `arviointi`.`Opiskelija_BEFORE_DELETE` BEFORE DELETE ON `Opiskelija` FOR EACH ROW
+BEGIN
+	DECLARE str VARCHAR(145);
+	SET str=CONCAT(OLD.idOpiskelija,' ',OLD.Etunimi,' ',OLD.Sukunimi,' ',OLD.Osoite,' ',OLD.Luokkatunnus);
+	INSERT INTO Roskakori VALUES(NULL,CURRENT_USER(),'Opiskelija',NOW(),str);
+END
+
+Arviointi-taulu:
+
+CREATE DEFINER = CURRENT_USER TRIGGER `arviointi`.`Arviointi_BEFORE_DELETE` BEFORE DELETE ON `Arviointi` FOR EACH ROW
+BEGIN
+	DECLARE str VARCHAR(145);
+	SET str=CONCAT(OLD.idArviointi,' ',OLD.Paivamaara,' ',OLD.Arvosana,' ',OLD.idOpiskelija,' ',OLD.idOpintojakso);
+	INSERT INTO Roskakori VALUES(NULL,CURRENT_USER(),'Arviointi',NOW(),str);
+END
+
+Opintojakso-taulu:
+
+CREATE DEFINER = CURRENT_USER TRIGGER `arviointi`.`Opintojakso_BEFORE_DELETE` BEFORE DELETE ON `Opintojakso` FOR EACH ROW
+BEGIN
+	DECLARE str VARCHAR(145);
+	SET str=CONCAT(OLD.idOpintojakso,' ',OLD.Koodi,' ',OLD.Laajuus,' ',OLD.Nimi);
+	INSERT INTO Roskakori VALUES(NULL,CURRENT_USER(),'Opintojakso',NOW(),str);
+END
